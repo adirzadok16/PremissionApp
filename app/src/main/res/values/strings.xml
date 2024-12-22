@@ -1,0 +1,8 @@
+<resources>
+    <string name="login">Login To The App\n</string>
+    <string name="password">password\n</string>
+    <string name="log_in">Login\n\n</string>
+    <string name="message">Welcome To The App\n           You connected to the WIFI\n           Your brightness is max\n           Your Volume is zero\n           Your battery is above 40%\</string>
+    <string name="Login_success">You have successfully logged in to the system</string>
+    <string name="check_premissions">Check Premissions</string>
+</resources>
