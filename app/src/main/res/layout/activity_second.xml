@@ -16,6 +16,7 @@
         android:layout_margin="16dp"
         android:textSize="20sp"
         android:layout_centerInParent="true"
+        android:textColor="@color/black"
         android:textStyle="bold"
         android:text="@string/Login_success"
         app:layout_constraintBottom_toBottomOf="parent"

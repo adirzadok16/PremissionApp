@@ -26,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
     private ActivityResultLauncher<String> requestPermissionLauncher;
     private boolean canLogin = false;
 
+    // Global variable for returnValue
+    private static boolean returnValue = false;
+
     // Buttons
     private MaterialButton loginButton;
     private MaterialButton checkPremissionButton;
@@ -37,8 +40,6 @@ public class MainActivity extends AppCompatActivity {
     private static ShapeableImageView main_SIV_StatusIconMinVolume;
     private static ShapeableImageView main_SIV_PhoneCharging;
     private static ShapeableImageView main_SIV_StatusIconBatteryOver40;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,53 +93,45 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     private boolean isMessageFromAfeka() {
         boolean hasSMS = smsReader.hasSMSFromSender("Afeka");
-        updateIconStatus(hasSMS,main_SIV_StatusIconSMSFromAfeka);
+        updateIconStatus(hasSMS, main_SIV_StatusIconSMSFromAfeka);
         return hasSMS;
     }
 
     public static boolean isBatteryAbove40(Context context) {
-        boolean returnValue = false; // Initialize returnValue to false
         BatteryManager batteryManager = (BatteryManager) context.getSystemService(Context.BATTERY_SERVICE);
-
         if (batteryManager != null) {
             int batteryLevel = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
-            returnValue = batteryLevel > 40; // Set returnValue based on the condition
+            returnValue = batteryLevel > 40; // Update global returnValue
         }
-        updateIconStatus(returnValue,main_SIV_StatusIconBatteryOver40);
-        return returnValue; // Return the result
+        updateIconStatus(returnValue, main_SIV_StatusIconBatteryOver40);
+        return returnValue;
     }
 
     private boolean isVolumeMin(Context context) {
-        boolean returnValue = false; // Default to false
         AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         if (audioManager != null) {
             int currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-            returnValue = (currentVolume == 0); // Update returnValue based on volume check
+            returnValue = (currentVolume == 0); // Update global returnValue
         }
-        updateIconStatus(returnValue,main_SIV_StatusIconMinVolume);
-        return returnValue; // Return the final result
+        updateIconStatus(returnValue, main_SIV_StatusIconMinVolume);
+        return returnValue;
     }
 
-
     private boolean isBrightnessMax(Context context) {
-        boolean returnValue = false;
-
         try {
             ContentResolver contentResolver = context.getContentResolver();
             int brightness = Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS);
-            returnValue = (brightness == 255); // Set returnValue based on brightness
+            returnValue = (brightness == 255); // Update global returnValue
         } catch (Settings.SettingNotFoundException e) {
             returnValue = false; // Explicitly set returnValue to false in case of exception
         }
-        updateIconStatus(returnValue,main_SIV_StatusIconBrightness);
-        return returnValue; // Return the variable
+        updateIconStatus(returnValue, main_SIV_StatusIconBrightness);
+        return returnValue;
     }
 
     private static boolean isConnectedToWIFI(Context context) {
-         boolean returnValue = false;
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager != null) {
@@ -147,26 +140,22 @@ public class MainActivity extends AppCompatActivity {
                 NetworkCapabilities networkCapabilities =
                         connectivityManager.getNetworkCapabilities(activeNetwork);
                 if (networkCapabilities != null) {
-                    returnValue = networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI);
+                    returnValue = networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI); // Update global returnValue
                 }
             }
         }
-        updateIconStatus(returnValue,main_SIV_StatusIconWIFI);
+        updateIconStatus(returnValue, main_SIV_StatusIconWIFI);
         return returnValue;
     }
 
-
     private boolean isCharging(Context context) {
-        boolean returnValue = false; // Default value
-
         BatteryManager batteryManager = (BatteryManager) context.getSystemService(Context.BATTERY_SERVICE);
         if (batteryManager != null) {
             int status = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS);
-            // Update returnValue based on the charging status
-            returnValue = (status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL);
+            returnValue = (status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL); // Update global returnValue
         }
-        updateIconStatus(returnValue,main_SIV_PhoneCharging);
-        return returnValue; // Return the evaluated value
+        updateIconStatus(returnValue, main_SIV_PhoneCharging);
+        return returnValue;
     }
 
     private void moveToNextScreen() {
@@ -174,18 +163,16 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, SecondActivity.class);
             startActivity(intent);
-        }
+        } else {
             Toast.makeText(MainActivity.this, "Not All Permissions Are met ", Toast.LENGTH_SHORT).show();
-
+        }
     }
 
     private static void updateIconStatus(boolean condition, ShapeableImageView imageView) {
         if (condition) {
             imageView.setImageResource(R.drawable.check_icon); // V icon
-            imageView.setColorFilter(R.color.green); // Green for V icon
         } else {
             imageView.setImageResource(android.R.drawable.ic_menu_close_clear_cancel); // X icon
-            imageView.setColorFilter(R.color.red); // Red for X icon
         }
     }
 
@@ -193,11 +180,10 @@ public class MainActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.main_BTN_Login);
         checkPremissionButton = findViewById(R.id.main_BTN_checkPremissions);
         main_SIV_StatusIconSMSFromAfeka = findViewById(R.id.main_SIV_StatusIconSMSFromAfeka);
-        main_SIV_StatusIconWIFI= findViewById(R.id.main_SIV_StatusIconWIFI);
-        main_SIV_StatusIconBrightness= findViewById(R.id.main_SIV_StatusIconBrightness);
-        main_SIV_StatusIconMinVolume= findViewById(R.id.main_SIV_StatusIconMinVolume);
-        main_SIV_PhoneCharging= findViewById(R.id.main_SIV_PhoneCharging);
-        main_SIV_StatusIconBatteryOver40  = findViewById(R.id.main_SIV_StatusIconBatteryOver40);
+        main_SIV_StatusIconWIFI = findViewById(R.id.main_SIV_StatusIconWIFI);
+        main_SIV_StatusIconBrightness = findViewById(R.id.main_SIV_StatusIconBrightness);
+        main_SIV_StatusIconMinVolume = findViewById(R.id.main_SIV_StatusIconMinVolume);
+        main_SIV_PhoneCharging = findViewById(R.id.main_SIV_PhoneCharging);
+        main_SIV_StatusIconBatteryOver40 = findViewById(R.id.main_SIV_StatusIconBatteryOver40);
     }
-
 }
